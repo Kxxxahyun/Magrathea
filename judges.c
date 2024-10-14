@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_JUDGES 6
-#define MAX_INFO_SIZE 1000
-
 // 밀리웨이즈
 // 이름:김영수,성별:남,소속:JYK 스튜디오,직함:음악 감독 및 프로듀서,전문분야:음악,메일:youngsu@outlook.com,전화:010-1234-5678
 // 이름:이지영,성별:여,소속:DK 엔터테인먼트,직함:댄스 감독,전문분야:댄스,메일:jiyounghere@outlook.com,전화:010-2345-6789
@@ -16,8 +13,8 @@ int main()
 {
     int num_judges;
     char project_name[100];
-    char judges_array[MAX_JUDGES * MAX_INFO_SIZE];
-    char buffer[MAX_INFO_SIZE];
+    char judges_array[6 * 1000];
+    char buffer[1000];
 
     printf("####################################\n");
     printf("#       심사자 풀 데이터 입력     #\n");
@@ -43,8 +40,8 @@ int main()
         scanf(" %[^\n]", buffer);
         getchar();
 
-        strncpy(judges_array + i * MAX_INFO_SIZE, buffer, MAX_INFO_SIZE - 1);
-        judges_array[(i + 1) * MAX_INFO_SIZE - 1] = '\0';
+        strncpy(judges_array + i * 1000, buffer, 1000 - 1);
+        judges_array[(i + 1) * 1000 - 1] = '\0';
         i++;
     }
 
@@ -66,9 +63,9 @@ int main()
         for (int i = 0; i < num_judges; i++)
         {
             printf("[심사자 %d]\n", i + 1);
-            char temp[MAX_INFO_SIZE];
-            strncpy(temp, judges_array + i * MAX_INFO_SIZE, MAX_INFO_SIZE - 1);
-            temp[MAX_INFO_SIZE - 1] = '\0';
+            char temp[1000];
+            strncpy(temp, judges_array + i * 1000, 1000 - 1);
+            temp[1000 - 1] = '\0';
             char *token = strtok(temp, ",");
             while (token != NULL)
             {
