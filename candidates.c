@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 int main()
 {
@@ -24,7 +24,17 @@ int main()
         {
             printf("%d. %s: ", i + 1, member_info[i]);
             fgets(candidates[candidate_number] + (i * 200), 200, stdin);
-            strtok(candidates[candidate_number] + (i * 200), "\n");
+
+            char *newline_pos = candidates[candidate_number] + (i * 200); // strtok 개행 없애기
+            while (*newline_pos != '\0')
+            {
+                if (*newline_pos == '\n')
+                {
+                    *newline_pos = '\0';
+                    break;
+                }
+                newline_pos++;
+            }
         }
 
         candidate_number++;
@@ -39,13 +49,40 @@ int main()
         char *current_candidate = candidates[i];
         char gender[10];
 
-        if (strcmp(current_candidate + 400, "F") == 0)
+        // strcmp 비교하기
+        char *gender_pointer = current_candidate + 400;
+        int is_female = 1;
+        while (*gender_pointer != '\0' && *gender_pointer == 'F')
         {
-            strcpy(gender, "여");
+            is_female = 1;
+            break;
         }
-        else if (strcmp(current_candidate + 400, "M") == 0)
+        while (*gender_pointer != '\0' && *gender_pointer == 'M')
         {
-            strcpy(gender, "남");
+            is_female = 0;
+            break;
+        }
+
+        // strcpy 문자열 복사하기
+        if (is_female)
+        {
+            char *src = "여";
+            char *dest = gender;
+            while (*src)
+            {
+                *dest++ = *src++;
+            }
+            *dest = '\0';
+        }
+        else
+        {
+            char *src = "남";
+            char *dest = gender;
+            while (*src)
+            {
+                *dest++ = *src++;
+            }
+            *dest = '\0';
         }
 
         printf("===============================================================================================================\n");
