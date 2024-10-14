@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_CANDIDATES 6
-#define MAX_INFO_SIZE 2200
-
 int main()
 {
-    char candidate01[MAX_INFO_SIZE], candidate02[MAX_INFO_SIZE], candidate03[MAX_INFO_SIZE], candidate04[MAX_INFO_SIZE], candidate05[MAX_INFO_SIZE], candidate06[MAX_INFO_SIZE];
-    char *candidates[MAX_CANDIDATES] = {candidate01, candidate02, candidate03, candidate04, candidate05, candidate06};
+    char candidate01[2200], candidate02[2200], candidate03[2200], candidate04[2200], candidate05[2200], candidate06[2200];
+    char *candidates[6] = {candidate01, candidate02, candidate03, candidate04, candidate05, candidate06};
 
     const char *member_info[11] = {"성명", "생일(YYYY/MM/DD 형식)", "성별(여성이면 F 또는 남성이면 M)", "메일 주소", "국적", "BMI", "주 스킬", "보조 스킬", "한국어 등급(TOPIK)", "MBTI", "소개"};
 
@@ -17,7 +14,7 @@ int main()
     printf("####################################\n");
     printf("     오디션 후보자 데이터 입력\n");
     printf("####################################\n");
-    while (candidate_number < MAX_CANDIDATES)
+    while (candidate_number < 6)
     {
         printf("=================================\n");
         printf("%d 번째 후보자의 정보를 입력합니다.\n", candidate_number + 1);
@@ -37,7 +34,7 @@ int main()
     printf("\n####################################\n");
     printf("     오디션 후보자 데이터 조회\n");
     printf("####################################\n");
-    for (int i = 0; i < MAX_CANDIDATES; i++)
+    for (int i = 0; i < 6; i++)
     {
         char *current_candidate = candidates[i];
         char gender[10];
