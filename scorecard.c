@@ -1,131 +1,115 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define MAX_CANDIDATES 6
-#define INFO_SIZE 7
-#define NAME_SIZE 50
 
 int main()
 {
-    char candidates[MAX_CANDIDATES * NAME_SIZE];
-    int scoring_sheet[MAX_CANDIDATES * INFO_SIZE];
-    char judge_name[10], expertise[10];
-    char names[] = "박지연,Ethan Smith,Suphanan Wong,Helena Silva,Karolina Nowak,Liam Wilson";
+    char *candidates[12] = {
+        "박지연", "000001", "Ethan Smith", "000002", "Helena Silva", "000003", "Liam Wilson", "000004", "Sakura Tanaka", "000005", "Carlos Mendez", "000006"};
 
-    // char *token = strtok(names, ",");
-    // for (int i = 0; i < MAX_CANDIDATES; i++)
-    // {
-    //     strncpy(&candidates[i * NAME_SIZE], token, NAME_SIZE - 1);
-    //     candidates[(i + 1) * NAME_SIZE - 1] = '\0'; // Ensure null-terminated strings
-    //     token = strtok(NULL, ",");
-    // }
+    char judge_name[50], expertise[50];
+    printf("####################################\n");
+    printf("#       오디션 심사 결과 입력      #\n");
+    printf("####################################\n");
+    printf("> 심사자 이름: ");
+    scanf("%s", judge_name);
+    printf("> 전문 분야: ");
+    scanf("%s", expertise);
 
-    while (1)
+    // 후보자 점수 배열 (ID, 음악, 댄스, 보컬, 비주얼, 전달력, 총점)
+    int scoring_sheet[42];
+
+    // 후보자 점수 입력
+    for (int i = 0; i < 6; i++)
     {
-        // 심사자 정보 입력
-        printf("####################################\n");
-        printf("#       오디션 심사 결과 입력     #\n");
-        printf("####################################\n");
-        printf("> 심사자 이름: ");
-        scanf("%9s", judge_name);
-        printf("> 전문 분야: ");
-        scanf("%9s", expertise);
-        getchar();
         printf("++++++++++++++++++++++++++++++++++++\n");
+        printf("후보자: %s\n", candidates[i * 2]);
 
-        // 후보자 점수 입력
-        for (int i = 0; i < MAX_CANDIDATES; i++)
+        scoring_sheet[i * 7] = atoi(candidates[i * 2 + 1]); // 후보자 ID candidates에서 꺼내옴
+
+        int total_score = 0;
+        for (int j = 1; j <= 5; j++)
         {
-            printf("후보자: %s\n", &candidates[i * NAME_SIZE]);
-            int total = 0;
-            for (int j = 0; j < INFO_SIZE - 2; j++)
+            int score = -1;
+            const char *fields[] = {"음악 소양", "댄스", "보컬", "비주얼", "전달력"};
+            while (score < 0 || score > 100)
             {
-                int score;
-                while (1)
+                printf("%s: ", fields[j - 1]);
+                scanf("%d", &score);
+                if (score < 0 || score > 100)
                 {
-                    printf("%s 점수: ", j == 0 ? "음악 소양" : j == 1 ? "댄스"
-                                                           : j == 2   ? "보컬"
-                                                           : j == 3   ? "비주얼"
-                                                                      : "전달력");
-                    scanf("%d", &score);
-                    if (score >= 10 && score <= 100)
-                    {
-                        scoring_sheet[i * INFO_SIZE + j] = score;
-                        total += score;
-                        break;
-                    }
-                    else
-                    {
-                        printf("잘못된 값입니다.\n");
-                    }
+                    printf("0에서 100 사이의 점수만 입력 가능.\n");
                 }
             }
-            scoring_sheet[i * INFO_SIZE + (INFO_SIZE - 2)] = total;
-            printf("------------------------------------\n");
+            scoring_sheet[i * 7 + j] = score;
+            total_score += score;
         }
-
-        // 제출 여부 묻기
-        printf("++++++++++++++++++++++++++++++++++++\n");
-        printf("입력을 모두 완료했습니다.\n");
-        printf("입력하신 내용을 검토하세요!\n");
-        printf("------------------------------------\n");
-        for (int i = 0; i < MAX_CANDIDATES; i++)
-        {
-            printf("%s: %d\n", &candidates[i * NAME_SIZE], scoring_sheet[i * INFO_SIZE + (INFO_SIZE - 2)]);
-        }
-        printf("제출하시겠습니까? ");
-        char submit;
-        getchar();
-        scanf("%c", &submit);
-        if (submit == 'Y')
-        {
-            printf("***최종 제출을 완료했습니다.***\n");
-            break;
-            printf(">\n");
-        }
-        else
-        {
-            printf("***다시 처음부터 입력합니다.***\n");
-            printf(">\n");
-        }
+        scoring_sheet[i * 7 + 6] = total_score;
     }
 
-    // 후보자 점수 집계
-    for (int i = 0; i < MAX_CANDIDATES - 1; i++)
+    // 총점 출력
+    printf("++++++++++++++++++++++++++++++++++++\n");
+    printf("입력을 모두 완료했습니다.\n");
+    printf("입력하신 내용을 검토하세요!\n");
+    printf("------------------------------------\n");
+    for (int i = 0; i < 6; i++)
     {
-        for (int j = i + 1; j < MAX_CANDIDATES; j++)
+        printf("%s: %d\n", candidates[i * 2], scoring_sheet[i * 7 + 6]);
+    }
+
+    // 제출 확인
+    char submit;
+    printf("제출하시겠습니까? ");
+    getchar();
+    scanf("%c", &submit);
+
+    if (submit == 'Y' || submit == 'y')
+    {
+        printf("***최종 제출을 완료했습니다.***\n");
+        printf(">\n");
+
+        // 버블 정렬
+        for (int i = 0; i < 5; i++)
         {
-            if (scoring_sheet[i * INFO_SIZE + (INFO_SIZE - 2)] < scoring_sheet[j * INFO_SIZE + (INFO_SIZE - 2)])
+            for (int j = i + 1; j < 6; j++)
             {
-                for (int k = 0; k < INFO_SIZE; k++)
+                if (scoring_sheet[i * 7 + 6] < scoring_sheet[j * 7 + 6])
                 {
-                    int temp = scoring_sheet[i * INFO_SIZE + k];
-                    scoring_sheet[i * INFO_SIZE + k] = scoring_sheet[j * INFO_SIZE + k];
-                    scoring_sheet[j * INFO_SIZE + k] = temp;
+                    // 점수 데이터 교환
+                    for (int k = 0; k < 7; k++)
+                    {
+                        int temp = scoring_sheet[i * 7 + k];
+                        scoring_sheet[i * 7 + k] = scoring_sheet[j * 7 + k];
+                        scoring_sheet[j * 7 + k] = temp;
+                    }
+                    // 이름 교환
+                    char *temp_name = candidates[i * 2];
+                    candidates[i * 2] = candidates[j * 2];
+                    candidates[j * 2] = temp_name;
+
+                    char *temp_id = candidates[i * 2 + 1];
+                    candidates[i * 2 + 1] = candidates[j * 2 + 1];
+                    candidates[j * 2 + 1] = temp_id;
                 }
-                char temp_name[NAME_SIZE];
-                strncpy(temp_name, &candidates[i * NAME_SIZE], NAME_SIZE - 1);
-                strncpy(&candidates[i * NAME_SIZE], &candidates[j * NAME_SIZE], NAME_SIZE - 1);
-                strncpy(&candidates[j * NAME_SIZE], temp_name, NAME_SIZE - 1);
-                candidates[(i + 1) * NAME_SIZE - 1] = '\0';
-                candidates[(j + 1) * NAME_SIZE - 1] = '\0';
             }
         }
-    }
 
-    // 후보자 점수 출력
-    printf("=======================================\n");
-    printf("후보 선발 결과 집계 중 ...\n");
-    printf("=======================================\n");
-    printf("#########################################\n");
-    printf("# 밀리웨이즈의 멤버가 된 걸 축하합니다! #\n");
-    printf("#########################################\n");
-    for (int i = 0; i < 4; i++)
-    {
-        printf("%d. %s\n", i + 1, &candidates[i * NAME_SIZE]);
+        // 합격 멤 출력
+        printf("=======================================\n");
+        printf("후보 선발 결과 집계 중 ...\n");
+        printf("=======================================\n");
+        printf("#########################################\n");
+        printf("# 밀리웨이즈의 멤버가 된 걸 축하합니다! #\n");
+        printf("#########################################\n");
+        for (int i = 0; i < 4; i++)
+        {
+            printf("%d. %s\n", i + 1, candidates[i * 2]);
+        }
+        printf("\n>\n");
     }
-    printf(">\n");
+    else
+    {
+        printf("다시 처음부터 입력.\n");
+    }
 
     getchar();
     getchar();
